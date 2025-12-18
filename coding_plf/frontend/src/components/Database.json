@@ -1,0 +1,13 @@
+{
+    "students": [
+      { "id": 1, "name": "John Doe", "rollNo": "1234", "year": "2023", "branch": "Computer Science", "role": "Student", "password": "******", "details": "Final year CS student." },
+      { "id": 2, "name": "Jane Doe", "rollNo": "5678", "year": "2022", "branch": "Mechanical Engineering", "role": "Student", "password": "******", "details": "Mechanical engineering graduate." },
+      { "id": 3, "name": "Sam Brown", "rollNo": "1357", "year": "2023", "branch": "Electronics", "role": "Student", "password": "******", "details": "Third-year electronics student." },
+      { "id": 4, "name": "Lisa Smith", "rollNo": "2468", "year": "2021", "branch": "Civil Engineering", "role": "Student", "password": "******", "details": "Civil engineering graduate." },
+      { "id": 5, "name": "Lisa Smh", "rollNo": "248", "year": "2021", "branch": "Civil Engineering", "role": "Student", "password": "151681498", "details": "Civil engineering graduate." }
+    ],
+    "clubHeads": [
+      { "id": 1, "name": "Alice Smith", "role": "Club Head", "password": "******" }
+    ]
+  }
+  

@@ -1,0 +1,113 @@
+/* index.css */
+/* index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+/* 1️⃣ Fluid typography */
+html {
+  font-size: clamp(14px, 0.95vw, 16px);
+}
+
+/* 2️⃣ Prevent horizontal overflow everywhere */
+* {
+  min-width: 0;
+}
+
+/* 3️⃣ Kill accidental sideways scroll */
+body {
+  overflow-x: hidden;
+}
+
+/* 4️⃣ Images never overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 5️⃣ Better scrollbars (optional but professional) */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+}
+
+/* Example global styling */
+
+/* Reset default body styles */
+body {
+  @apply bg-gray-900 text-white font-sans;
+}
+
+/* Customize links */
+a {
+  @apply text-blue-400 hover:text-blue-300;
+}
+
+/* Global button style */
+button {
+  @apply bg-blue-600 text-white px-4 py-2 rounded;
+}
+
+button:hover {
+  @apply bg-blue-500;
+}
+
+
+/* Hide scrollbar */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Make sure the scrollbar appears on hover if necessary */
+.scrollbar-visible::-webkit-scrollbar {
+  display: block;
+}
+
+.scrollbar-visible {
+  -ms-overflow-style: auto; /* IE and Edge */
+  scrollbar-width: auto; /* Firefox */
+}
+.scroll-container {
+  overflow-x: auto;
+  white-space: nowrap;
+  scroll-behavior: smooth; /* Smooth scrolling */
+}
+
+.event-card {
+  display: inline-block;
+  min-width: 300px;
+  background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.5), rgba(200, 200, 200, 0.5));
+  transition: background 0.3s ease;
+}
+
+.event-card:hover {
+  background: linear-gradient(to bottom right, rgba(255, 230, 230, 0.7), rgba(255, 255, 255, 0.7));
+}
+
+
+.animated-gradient {
+  background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #0f2027);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+}
+
+@keyframes gradientBG {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

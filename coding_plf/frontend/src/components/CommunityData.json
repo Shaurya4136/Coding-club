@@ -1,0 +1,86 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "type": "question",
+      "user": "John Doe",
+      "avatar": "https://via.placeholder.com/50",
+      "question": "How do I implement WebSockets in React?",
+      "tags": ["WebSockets", "React"],
+      "datePosted": "2024-09-01",
+      "timePosted": "12:30:00"
+    },
+    {
+      "id": 2,
+      "type": "question",
+      "user": "Jane Smith",
+      "avatar": "https://via.placeholder.com/50",
+      "question": "What's the best way to manage state in React?",
+      "tags": ["State Management", "React"],
+      "datePosted": "2024-09-02",
+      "timePosted": "13:15:00"
+    },
+    {
+      "id": 3,
+      "type": "question",
+      "user": "Alex Johnson",
+      "avatar": "https://via.placeholder.com/50",
+      "question": "Can anyone explain the context API in simple terms?",
+      "tags": ["Context API", "React"],
+      "datePosted": "2024-09-03",
+      "timePosted": "10:00:00"
+    },
+    {
+      "id": 4,
+      "type": "question",
+      "user": "Maria Garcia",
+      "avatar": "https://via.placeholder.com/50",
+      "question": "What is the difference between class components and functional components?",
+      "tags": ["Components", "React"],
+      "datePosted": "2024-09-04",
+      "timePosted": "15:45:00"
+    },
+    {
+      "id": 5,
+      "type": "question",
+      "user": "Steve Wilson",
+      "avatar": "https://via.placeholder.com/50",
+      "question": "How to improve performance in large React applications?",
+      "tags": ["Performance", "React"],
+      "datePosted": "2024-09-05",
+      "timePosted": "11:20:00"
+    },
+    {
+      "id": 6,
+      "type": "event",
+      "title": "React Workshop",
+      "description": "A workshop on advanced React techniques.",
+      "date": "2024-08-10",
+      "poster": "https://via.placeholder.com/600x400"
+    },
+    {
+      "id": 7,
+      "type": "event",
+      "title": "JavaScript Meetup",
+      "description": "Monthly meetup for JavaScript enthusiasts.",
+      "date": "2024-12-15",
+      "poster": "https://via.placeholder.com/600x400"
+    },
+    {
+      "id": 8,
+      "type": "event",
+      "title": "CSS Tricks Webinar",
+      "description": "Webinar on advanced CSS techniques and tricks.",
+      "date": "2024-1-20",
+      "poster": "https://via.placeholder.com/600x400"
+    },
+    {
+      "id": 9,
+      "type": "event",
+      "title": "Frontend Development Conference",
+      "description": "Annual conference for frontend developers.",
+      "date": "2024-01-25",
+      "poster": "https://via.placeholder.com/600x400"
+    }
+  ]
+}

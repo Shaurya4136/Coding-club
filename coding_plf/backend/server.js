@@ -25,7 +25,7 @@ const server = http.createServer(app);
 /* ================= CORS ================= */
 app.use(
   cors({
-    origin: [
+     origin: [
     "http://localhost:3000", // local dev
     "https://coding-club-frontend-dy6w.onrender.com" // deployed frontend
   ], // deployed frontend,

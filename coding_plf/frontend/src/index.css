@@ -111,3 +111,7 @@ button:hover {
     background-position: 0% 50%;
   }
 }
+.btn-primary { @apply bg-blue-600 px-4 py-2 rounded-xl; }
+.btn-gray { @apply bg-gray-700 px-4 py-2 rounded-xl; }
+.btn-outline { @apply border border-gray-700 px-4 py-2 rounded-xl; }
+.btn-green { @apply bg-green-600 px-4 py-2 rounded-xl; }

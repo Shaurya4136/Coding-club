@@ -2,12 +2,12 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-const authenticateToken = require("../middleware/authenticateToken");
-const User = require("../models/User");
-const StudentQuestion = require("../models/Studentpost");
-const ClubHeadPost = require("../models/ClubHeadPost");
-const StudentProfile = require("../models/StudentProfil");
-const ClubHeadProfile = require("../models/ClubHeadProfile");
+const authenticateToken = require("../../middleware/authenticateToken");
+const User = require("../../models/User");
+const StudentQuestion = require("../../models/Studentpost");
+const ClubHeadPost = require("../../models/ClubHeadPost");
+const StudentProfile = require("../../models/StudentProfil");
+const ClubHeadProfile = require("../../models/ClubHeadProfile");
 
 // 🔐 ClubHead / Admin only
 const allowModerators = (req, res, next) => {

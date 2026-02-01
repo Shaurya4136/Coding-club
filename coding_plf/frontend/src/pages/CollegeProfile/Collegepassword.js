@@ -1,382 +1,193 @@
-import React, { useState, useEffect, useRef } from 'react';
-// import CollegeNavbar from '../../components/CollegeNavbar';
-import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
-import { FaEllipsisV } from 'react-icons/fa';
-import data from '../../components/Database.json'; // Adjust the path as necessary
+import React, { useEffect, useRef, useState } from "react";
+import axios from "axios";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { FaEllipsisV } from "react-icons/fa";
+import { normalizeRole } from "../../utils/normalizeRole";
 
 const CollegePassword = () => {
-  const [students, setStudents] = useState([]);
-  const [clubHeads, setClubHeads] = useState([]);
-  const [editingPasswordId, setEditingPasswordId] = useState(null);
+  const [users, setUsers] = useState([]);
+  const [activeRole, setActiveRole] = useState("Student");
+  const [editingId, setEditingId] = useState(null);
   const [passwords, setPasswords] = useState({});
   const [showPassword, setShowPassword] = useState({});
-  const [section, setSection] = useState('students'); // 'students', 'clubHeads', or 'blocked'
-  const [filters, setFilters] = useState({ rollNo: '', year: '', branch: '' });
-  const [selectedStudent, setSelectedStudent] = useState(null);
-  const [showMenuId, setShowMenuId] = useState(null);
-  const [blockedIds, setBlockedIds] = useState([]);
+  const [menuId, setMenuId] = useState(null);
+  const [search, setSearch] = useState("");
   const menuRef = useRef(null);
 
+  /* =========================
+     FETCH USERS
+  ========================== */
   useEffect(() => {
-    const fetchProfiles = async () => {
-      if (data && typeof data === 'object') {
-        const studentsData = data.students || [];
-        const clubHeadsData = data.clubHeads || [];
+    const fetchUsers = async () => {
+      const token = localStorage.getItem("token");
 
-        setStudents(studentsData);
-        setClubHeads(clubHeadsData);
-      } else {
-        console.error('Invalid data format');
-      }
+      const res = await axios.get(
+        "http://localhost:5000/api/college/users",
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      const normalized = res.data.map((u) => ({
+        ...u,
+        normalizedRole: normalizeRole(u.role),
+      }));
+
+      setUsers(normalized);
     };
 
-    fetchProfiles();
-
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowMenuId(null); // Close the menu if clicked outside
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    fetchUsers();
   }, []);
 
-  const handlePasswordChange = (e, id) => {
-    const { value } = e.target;
-    setPasswords((prevState) => ({ ...prevState, [id]: value }));
-  };
+  /* =========================
+     RESET PASSWORD
+  ========================== */
+  const handleSavePassword = async (id) => {
+    const token = localStorage.getItem("token");
 
-  const handlePasswordVisibility = (id) => {
-    setShowPassword((prevState) => ({
-      ...prevState,
-      [id]: !prevState[id],
-    }));
-  };
+    if (!passwords[id] || passwords[id].length < 6) {
+      alert("Password must be at least 6 characters");
+      return;
+    }
 
-  const handleEditPassword = (id) => {
-    setEditingPasswordId(id);
-    setShowMenuId(null); // Close menu on edit
-  };
-
-  const handleSavePassword = (id) => {
-    console.log(`Password for user with id ${id} has been updated to: ${passwords[id]}`);
-    // Update the student's password in the data
-    setStudents((prevStudents) =>
-      prevStudents.map((student) =>
-        student.id === id ? { ...student, password: passwords[id] } : student
-      )
+    await axios.put(
+      `http://localhost:5000/api/college/users/${id}/password`,
+      { password: passwords[id] },
+      { headers: { Authorization: `Bearer ${token}` } }
     );
-    setEditingPasswordId(null); // Close password edit form
-    setPasswords((prev) => ({ ...prev, [id]: '' })); // Reset password field
+
+    alert("Password reset successful");
+    setEditingId(null);
+    setPasswords((p) => ({ ...p, [id]: "" }));
   };
 
-  const handleToggleSection = (section) => {
-    setSection(section);
-  };
+  /* =========================
+     FILTER (ROLE + SEARCH)
+  ========================== */
+  const filteredUsers = users.filter((u) => {
+    const matchesRole = u.normalizedRole === activeRole;
+    const matchesSearch =
+      u.name.toLowerCase().includes(search.toLowerCase()) ||
+      u.email.toLowerCase().includes(search.toLowerCase());
 
-  const handleFilterChange = (e) => {
-    const { name, value } = e.target;
-    setFilters((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleMenuClick = (id) => {
-    setShowMenuId(showMenuId === id ? null : id); // Toggle menu for the specific user
-  };
-
-  const handleViewProfile = (user) => {
-    setSelectedStudent(user);
-    setShowMenuId(null); // Close menu
-  };
-
-  const handleBlockUnblock = (id) => {
-    setBlockedIds((prev) =>
-      prev.includes(id) ? prev.filter((blockedId) => blockedId !== id) : [...prev, id]
-    );
-    setShowMenuId(null); // Close menu on block/unblock
-  };
-
-  const filteredStudents = students.filter((student) => {
-    return (
-      (!filters.rollNo || student.rollNo.includes(filters.rollNo)) &&
-      (!filters.year || student.year === filters.year) &&
-      (!filters.branch || student.branch === filters.branch) &&
-      !blockedIds.includes(student.id)
-    );
+    return matchesRole && matchesSearch;
   });
 
-  const blockedStudents = students.filter((student) => blockedIds.includes(student.id));
-
   return (
-    <div className="min-h-screen bg-gray-900 text-gray-200">
-      {/* <CollegeNavbar /> */}
-      <div className="container mx-auto py-10 px-5">
-        <h1 className="text-4xl font-bold mb-10 text-center text-gray-100">College Administration Panel</h1>
+    <div className="min-h-screen bg-gray-900 text-gray-200 p-8">
+      <h1 className="text-3xl font-bold text-center mb-6">
+        College – Password Administration
+      </h1>
 
-        {/* Section Toggle (Slider) */}
-        <div className="flex justify-center items-center mb-10 space-x-2">
+      {/* ROLE TABS */}
+      <div className="flex justify-center gap-4 mb-6">
+        {["Student", "ClubHead", "College"].map((role) => (
           <button
-            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-              section === 'students' ? 'bg-gray-700 text-gray-100' : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
+            key={role}
+            onClick={() => setActiveRole(role)}
+            className={`px-6 py-2 rounded-lg ${
+              activeRole === role
+                ? "bg-blue-600"
+                : "bg-gray-700 hover:bg-gray-600"
             }`}
-            onClick={() => handleToggleSection('students')}
           >
-            Students
+            {role}
           </button>
-          <button
-            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-              section === 'clubHeads' ? 'bg-gray-700 text-gray-100' : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
-            }`}
-            onClick={() => handleToggleSection('clubHeads')}
-          >
-            Club Heads
-          </button>
-          <button
-            className={`px-6 py-3 rounded-lg font-medium transition-colors ${
-              section === 'blocked' ? 'bg-gray-700 text-gray-100' : 'bg-gray-600 text-gray-300 hover:bg-gray-500'
-            }`}
-            onClick={() => handleToggleSection('blocked')}
-          >
-            Blocked Students
-          </button>
-        </div>
-
-        {/* Filters for Students Section */}
-        {section === 'students' && (
-          <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <input
-              type="text"
-              name="rollNo"
-              value={filters.rollNo}
-              onChange={handleFilterChange}
-              placeholder="Filter by Roll No"
-              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-            />
-            <input
-              type="text"
-              name="year"
-              value={filters.year}
-              onChange={handleFilterChange}
-              placeholder="Filter by Year"
-              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-            />
-            <input
-              type="text"
-              name="branch"
-              value={filters.branch}
-              onChange={handleFilterChange}
-              placeholder="Filter by Branch"
-              className="p-3 bg-gray-800 text-gray-200 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-            />
-          </div>
-        )}
-
-        {/* Profile View */}
-        {selectedStudent && (
-          <div className="bg-gray-800 border border-gray-700 p-6 rounded-lg mb-6 relative">
-            <button
-              onClick={() => setSelectedStudent(null)}
-              className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
-            >
-              ✕
-            </button>
-            <h2 className="text-xl font-bold mb-4">{selectedStudent.name}'s Profile</h2>
-            <p>
-              <strong>Roll No:</strong> {selectedStudent.rollNo}
-            </p>
-            <p>
-              <strong>Year:</strong> {selectedStudent.year}
-            </p>
-            <p>
-              <strong>Branch:</strong> {selectedStudent.branch}
-            </p>
-            <p>
-              <strong>Current Password:</strong> {selectedStudent.password}
-            </p>
-            <p>
-              <strong>Details:</strong> {selectedStudent.details}
-            </p>
-          </div>
-        )}
-
-        {/* Blocked Students Section */}
-        {section === 'blocked' && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">Blocked Students</h2>
-            {blockedStudents.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {blockedStudents.map((student) => (
-                  <div
-                    key={student.id}
-                    className="bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg relative"
-                  >
-                    <p className="text-lg font-semibold mb-2">{student.name}</p>
-                    <p className="text-sm text-gray-500 mb-4">Roll No: {student.rollNo}</p>
-                    <button
-                      onClick={() => handleBlockUnblock(student.id)}
-                      className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
-                    >
-                      Unblock
-                    </button>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p>No blocked students.</p>
-            )}
-          </div>
-        )}
-
-        {/* Students Section */}
-        {(section === 'students' || section === 'clubHeads') && (
-          <div>
-            <h2 className="text-2xl font-bold mb-4">{section === 'students' ? 'Students' : 'Club Heads'}</h2>
-            {section === 'students' ? (
-              filteredStudents.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {filteredStudents.map((student) => (
-                    <div
-                      key={student.id}
-                      className="bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg relative"
-                    >
-                      <p className="text-lg font-semibold mb-2">{student.name}</p>
-                      <p className="text-sm text-gray-500 mb-4">Roll No: {student.rollNo}</p>
-                      <button
-                        onClick={() => handleMenuClick(student.id)}
-                        className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
-                      >
-                        <FaEllipsisV />
-                      </button>
-                      {showMenuId === student.id && (
-                        <div
-                          ref={menuRef}
-                          className="absolute top-10 right-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg shadow-lg p-2 z-50"
-                        >
-                          <button
-                            onClick={() => handleViewProfile(student)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            View Profile
-                          </button>
-                          <button
-                            onClick={() => handleEditPassword(student.id)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            Edit Password
-                          </button>
-                          <button
-                            onClick={() => handleBlockUnblock(student.id)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            {blockedIds.includes(student.id) ? 'Unblock' : 'Block'}
-                          </button>
-                        </div>
-                      )}
-                      {editingPasswordId === student.id && (
-                        <div className="mt-4">
-                          <input
-                            type={showPassword[student.id] ? 'text' : 'password'}
-                            value={passwords[student.id] || ''}
-                            onChange={(e) => handlePasswordChange(e, student.id)}
-                            placeholder="New Password"
-                            className="p-2 bg-gray-800 text-gray-200 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-                          />
-                          <button
-                            onClick={() => handlePasswordVisibility(student.id)}
-                            className="ml-2 text-gray-400 hover:text-gray-200"
-                          >
-                            {showPassword[student.id] ? <AiFillEyeInvisible /> : <AiFillEye />}
-                          </button>
-                          <button
-                            onClick={() => handleSavePassword(student.id)}
-                            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No students found.</p>
-              )
-            ) : (
-              clubHeads.length > 0 ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {clubHeads.map((clubHead) => (
-                    <div
-                      key={clubHead.id}
-                      className="bg-gray-800 border border-gray-700 p-6 rounded-lg shadow-lg relative"
-                    >
-                      <p className="text-lg font-semibold mb-2">{clubHead.name}</p>
-                      <p className="text-sm text-gray-500 mb-4">Roll No: {clubHead.rollNo}</p>
-                      <button
-                        onClick={() => handleMenuClick(clubHead.id)}
-                        className="absolute top-2 right-2 text-gray-400 hover:text-gray-200"
-                      >
-                        <FaEllipsisV />
-                      </button>
-                      {showMenuId === clubHead.id && (
-                        <div
-                          ref={menuRef}
-                          className="absolute top-10 right-2 bg-gray-700 text-gray-200 border border-gray-600 rounded-lg shadow-lg p-2 z-50"
-                        >
-                          <button
-                            onClick={() => handleViewProfile(clubHead)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            View Profile
-                          </button>
-                          <button
-                            onClick={() => handleEditPassword(clubHead.id)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            Edit Password
-                          </button>
-                          <button
-                            onClick={() => handleBlockUnblock(clubHead.id)}
-                            className="block px-4 py-2 hover:bg-gray-600 rounded-lg"
-                          >
-                            {blockedIds.includes(clubHead.id) ? 'Unblock' : 'Block'}
-                          </button>
-                        </div>
-                      )}
-                      {editingPasswordId === clubHead.id && (
-                        <div className="mt-4">
-                          <input
-                            type={showPassword[clubHead.id] ? 'text' : 'password'}
-                            value={passwords[clubHead.id] || ''}
-                            onChange={(e) => handlePasswordChange(e, clubHead.id)}
-                            placeholder="New Password"
-                            className="p-2 bg-gray-800 text-gray-200 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
-                          />
-                          <button
-                            onClick={() => handlePasswordVisibility(clubHead.id)}
-                            className="ml-2 text-gray-400 hover:text-gray-200"
-                          >
-                            {showPassword[clubHead.id] ? <AiFillEyeInvisible /> : <AiFillEye />}
-                          </button>
-                          <button
-                            onClick={() => handleSavePassword(clubHead.id)}
-                            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                          >
-                            Save
-                          </button>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p>No club heads found.</p>
-              )
-            )}
-          </div>
-        )}
+        ))}
       </div>
+
+      {/* SEARCH */}
+      <div className="max-w-md mx-auto mb-8">
+        <input
+          type="text"
+          placeholder="Search by name or email..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full p-3 rounded-lg bg-gray-800 border border-gray-700 focus:outline-none"
+        />
+      </div>
+
+      {/* USERS GRID */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredUsers.map((user) => (
+          <div
+            key={user._id}
+            className="bg-gray-800 p-5 rounded-xl relative"
+          >
+            <p className="font-semibold text-lg">{user.name}</p>
+            <p className="text-sm text-gray-400">{user.email}</p>
+
+            <div className="text-xs text-gray-500 mt-2 space-y-1">
+              <p>Role: {user.normalizedRole}</p>
+              <p>Status: {user.status}</p>
+              <p>Password: ********</p>
+            </div>
+
+            <button
+              onClick={() =>
+                setMenuId(menuId === user._id ? null : user._id)
+              }
+              className="absolute top-3 right-3"
+            >
+              <FaEllipsisV />
+            </button>
+
+            {menuId === user._id && (
+              <div className="absolute top-10 right-3 bg-gray-700 rounded-lg shadow-lg z-50">
+                <button
+                  onClick={() => setEditingId(user._id)}
+                  className="block px-4 py-2 hover:bg-gray-600 w-full text-left"
+                >
+                  Reset Password
+                </button>
+              </div>
+            )}
+
+            {editingId === user._id && (
+              <div className="mt-4 flex items-center gap-2">
+                <input
+                  type={showPassword[user._id] ? "text" : "password"}
+                  value={passwords[user._id] || ""}
+                  onChange={(e) =>
+                    setPasswords({
+                      ...passwords,
+                      [user._id]: e.target.value,
+                    })
+                  }
+                  placeholder="New Password"
+                  className="flex-1 p-2 bg-gray-900 border border-gray-700 rounded"
+                />
+
+                <button
+                  onClick={() =>
+                    setShowPassword({
+                      ...showPassword,
+                      [user._id]: !showPassword[user._id],
+                    })
+                  }
+                >
+                  {showPassword[user._id] ? (
+                    <AiFillEyeInvisible />
+                  ) : (
+                    <AiFillEye />
+                  )}
+                </button>
+
+                <button
+                  onClick={() => handleSavePassword(user._id)}
+                  className="px-3 py-1 bg-blue-600 rounded"
+                >
+                  Save
+                </button>
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+
+      {filteredUsers.length === 0 && (
+        <p className="text-center text-gray-500 mt-10">
+          No users found
+        </p>
+      )}
     </div>
   );
 };

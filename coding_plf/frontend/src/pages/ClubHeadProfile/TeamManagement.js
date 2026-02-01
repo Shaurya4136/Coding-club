@@ -203,21 +203,28 @@ const TeamManagement = () => {
   };
 
   /* ===================== BLOCK REQUEST ===================== */
-  const requestBlock = async () => {
-    const reason = prompt("Enter reason for blocking this user");
-    if (!reason) return;
+ const requestBlock = async () => {
+  const reason = prompt("Enter reason for blocking this user");
+  if (!reason) return;
 
-    try {
-      await axios.post(
-        "http://localhost:5000/api/club/block-request",
-        { userId: activeUser._id, reason },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      alert("✅ Block request submitted");
-    } catch {
-      alert("❌ Failed to submit block request");
-    }
-  };
+  try {
+    await axios.post(
+      "http://localhost:5000/api/club/block-request",
+      { userId: activeUser._id, reason },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    alert("✅ Block request submitted");
+
+    // 👇 instant UI update
+    setActiveUser(prev => ({
+      ...prev,
+      status: "BlockRequested",
+    }));
+  } catch (err) {
+    alert(err.response?.data?.message || "❌ Failed to submit block request");
+  }
+};
 
   return (
     <div className="h-screen bg-gray-950 text-white flex flex-col md:flex-row">

@@ -19,37 +19,38 @@ const Sidebar = ({ items = [], collapsed, setCollapsed }) => {
   /* ===============================
      Fetch Profile
   ================================ */
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) return;
-
-        const res = await axios.get("http://localhost:5000/api/profile", {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setProfile(res.data);
-      } catch (err) {
-        console.error("Sidebar profile fetch failed:", err);
-      }
-    };
-
-    fetchProfile();
-  }, []);
+ 
 
   /* ===============================
      Online / Offline Indicator
   ================================ */
-  useEffect(() => {
-    const updateStatus = () => setOnline(navigator.onLine);
-    window.addEventListener("online", updateStatus);
-    window.addEventListener("offline", updateStatus);
-    return () => {
-      window.removeEventListener("online", updateStatus);
-      window.removeEventListener("offline", updateStatus);
-    };
-  }, []);
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token || !role) return;
+
+      const res = await axios.get("http://localhost:5000/api/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      const normalizedProfile = {
+        ...res.data,
+        avatar: res.data?.avatar || "/default-avatar.png",
+      };
+
+      setProfile(normalizedProfile);
+    } catch (err) {
+      console.error(
+        "Sidebar profile fetch failed:",
+        err.response?.data || err.message
+      );
+    }
+  };
+
+  fetchProfile();
+}, [role]);
+
 
   /* ===============================
      Logout

@@ -1,47 +1,43 @@
-const User = require('../models/User1');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 
-// Register a new user
-const registerUser = async (req, res) => {
-  const { name, email, password } = req.body;
+const authenticateToken = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Access denied. No token provided." });
+  }
+
+  const token = authHeader.split(" ")[1];
+
   try {
-    // Check if user already exists
-    let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ msg: 'User already exists' });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Hash password and create new user
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    user = new User({ name, email, password: hashedPassword });
-    await user.save();
+    // 🔥 FIX: SUPPORT BOTH id & userId
+    const userId = decoded.userId || decoded.id;
 
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token, user: { id: user._id, name, email } });
-  } catch (err) {
-    res.status(500).send('Server error');
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found." });
+    }
+
+    req.user = {
+      _id: user._id,
+      id: user._id,
+      userId: user._id,
+      name: user.name,
+      email: user.email,
+      avatar: user.avatar || null,
+      role: user.role, // Student | Club Head | College
+    };
+
+    next();
+  } catch (error) {
+    if (error.name === "TokenExpiredError") {
+      return res.status(401).json({ message: "Token expired" });
+    }
+    return res.status(403).json({ message: "Invalid token" });
   }
 };
 
-// Login user
-const loginUser = async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ msg: 'Invalid credentials' });
-
-    // Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ msg: 'Invalid credentials' });
-
-    // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.json({ token, user: { id: user._id, name: user.name, email } });
-  } catch (err) {
-    res.status(500).send('Server error');
-  }
-};
-
-module.exports = { registerUser, loginUser };
+module.exports = authenticateToken;

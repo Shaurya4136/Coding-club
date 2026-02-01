@@ -1,14 +1,15 @@
 import React, { useState } from "react";
-import { FaUserGraduate, FaUsers, FaUniversity } from "react-icons/fa";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { FaUserGraduate, FaUsers, FaUniversity, FaArrowLeft } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import Footer from "../components/Footer";
+// import Navbar from "../components/Navbar";
 
 const DarkThemeCards = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
   const handleNavigation = (path, role) => {
-    navigate(path, { state: { role } }); // Pass the role as state
+    navigate(path, { state: { role } });
   };
 
   const handleMouseMove = (e) => {
@@ -17,88 +18,128 @@ const DarkThemeCards = () => {
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
-    card.style.setProperty('--x', `${x}px`);
-    card.style.setProperty('--y', `${y}px`);
-  };
-
-  const handleMouseEnter = (cardName) => {
-    setHoveredCard(cardName);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredCard(null);
+    card.style.setProperty("--x", `${x}px`);
+    card.style.setProperty("--y", `${y}px`);
   };
 
   return (
-    <div>
-      <div className="min-h-screen flex justify-center items-center bg-gradient-to-r from-black via-gray-900 to-black">
-        <video className="absolute inset-0 w-full h-full object-cover z-0" autoPlay loop muted playsInline>
-          <source src='' type="video/mp4" />
-          Your browser does not support the video tag.
-        </video>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl w-full p-4">
+    <div className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white">
+      {/* <Navbar /> */}
 
-          {/* Student Card */}
-          <div
-            className="relative card p-8 rounded-lg bg-gray-900 text-center transition duration-300 ease-in-out transform hover:scale-110 cursor-pointer hover:shadow-[0_0_25px_15px_rgba(0,191,255,0.8)] border border-gray-700 hover:border-cyan-500"
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => handleMouseEnter("Student")}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/StudentLoginRegister', 'Student')} // Pass role
-            style={{ background: 'radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 191, 255, 0.3), transparent 60%)' }}
-          >
-            <FaUserGraduate className="text-cyan-300 text-6xl mb-4 mx-auto transition-transform duration-300 transform hover:scale-125" />
-            <h2 className="text-3xl font-bold mb-4 text-white tracking-wide">Student</h2>
-            <p className="text-gray-400">This card represents the student profile with detailed information.</p>
-            {hoveredCard === "Student" && (
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mt-2 p-2 bg-cyan-700 text-white rounded-md shadow-lg">
-                Student Profile Info
-              </div>
-            )}
-          </div>
+      {/* 🔙 Back Button */}
+      <button
+        onClick={() => navigate("/")}
+        className="fixed top-20 left-6 z-50 flex items-center gap-2
+                   bg-gray-900/80 backdrop-blur-md px-4 py-2 rounded-full
+                   text-sm text-gray-300 hover:text-white
+                   hover:bg-gray-800 transition shadow-lg"
+      >
+        <FaArrowLeft />
+        Back to Home
+      </button>
 
-          {/* Club Head Card */}
-          <div
-            className="relative card p-8 rounded-lg bg-gray-900 text-center transition duration-300 ease-in-out transform hover:scale-110 cursor-pointer hover:shadow-[0_0_25px_15px_rgba(0,191,255,0.8)] border border-gray-700 hover:border-cyan-500"
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => handleMouseEnter("Club Head")}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/ClubHeadLoginRegister', 'Club Head')} // Pass role
-            style={{ background: 'radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 191, 255, 0.3), transparent 60%)' }}
-          >
-            <FaUsers className="text-cyan-300 text-6xl mb-4 mx-auto transition-transform duration-300 transform hover:scale-125" />
-            <h2 className="text-3xl font-bold mb-4 text-white tracking-wide">Club Head</h2>
-            <p className="text-gray-400">This card represents the club head role and associated activities.</p>
-            {hoveredCard === "Club Head" && (
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mt-2 p-2 bg-cyan-700 text-white rounded-md shadow-lg">
-                Club Head Info
-              </div>
-            )}
-          </div>
+      {/* Page Content */}
+      <div className="min-h-screen flex flex-col justify-center items-center px-4">
+        
+        {/* Heading */}
+        <div className="text-center mb-14">
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
+            Choose Your Role
+          </h1>
+          <p className="mt-4 text-gray-400 max-w-xl mx-auto">
+            Select how you want to continue. Each role unlocks a tailored experience.
+          </p>
+        </div>
 
-          {/* College Card */}
-          <div
-            className="relative card p-8 rounded-lg bg-gray-900 text-center transition duration-300 ease-in-out transform hover:scale-110 cursor-pointer hover:shadow-[0_0_25px_15px_rgba(0,191,255,0.8)] border border-gray-700 hover:border-cyan-500"
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => handleMouseEnter("College")}
-            onMouseLeave={handleMouseLeave}
-            onClick={() => handleNavigation('/CollegeLoginRegister', 'College')} // Pass role
-            style={{ background: 'radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(0, 191, 255, 0.3), transparent 60%)' }}
-          >
-            <FaUniversity className="text-cyan-300 text-6xl mb-4 mx-auto transition-transform duration-300 transform hover:scale-125" />
-            <h2 className="text-3xl font-bold mb-4 text-white tracking-wide">College</h2>
-            <p className="text-gray-400">This card provides information about the college and its departments.</p>
-            {hoveredCard === "College" && (
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-full mt-2 p-2 bg-cyan-700 text-white rounded-md shadow-lg">
-                College Info
-              </div>
-            )}
-          </div>
+        {/* Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-6xl w-full">
+
+          {/* Student */}
+          <RoleCard
+            icon={<FaUserGraduate />}
+            title="Student"
+            description="Access coding challenges, events, and your student dashboard."
+            hovered={hoveredCard}
+            setHovered={setHoveredCard}
+            onMove={handleMouseMove}
+            onClick={() => handleNavigation("/StudentLoginRegister", "Student")}
+          />
+
+          {/* Club Head */}
+          <RoleCard
+            icon={<FaUsers />}
+            title="Club Head"
+            description="Manage club members, events, and announcements."
+            hovered={hoveredCard}
+            setHovered={setHoveredCard}
+            onMove={handleMouseMove}
+            onClick={() => handleNavigation("/ClubHeadLoginRegister", "Club Head")}
+          />
+
+          {/* College */}
+          <RoleCard
+            icon={<FaUniversity />}
+            title="College"
+            description="Oversee departments, clubs, and institutional activities."
+            hovered={hoveredCard}
+            setHovered={setHoveredCard}
+            onMove={handleMouseMove}
+            onClick={() => handleNavigation("/CollegeLoginRegister", "College")}
+          />
         </div>
       </div>
+
       <Footer />
     </div>
   );
 };
+
+/* ---------------- ROLE CARD COMPONENT ---------------- */
+
+const RoleCard = ({
+  icon,
+  title,
+  description,
+  hovered,
+  setHovered,
+  onMove,
+  onClick,
+}) => (
+  <div
+    onMouseMove={onMove}
+    onMouseEnter={() => setHovered(title)}
+    onMouseLeave={() => setHovered(null)}
+    onClick={onClick}
+    tabIndex={0}
+    role="button"
+    className="
+      relative cursor-pointer rounded-2xl p-8 text-center
+      bg-gray-900 border border-gray-700
+      transition-all duration-300
+      hover:scale-105 hover:border-cyan-400
+      hover:shadow-[0_0_40px_rgba(0,191,255,0.25)]
+      focus:outline-none focus:ring-2 focus:ring-cyan-500
+    "
+    style={{
+      background:
+        "radial-gradient(circle at var(--x,50%) var(--y,50%), rgba(0,191,255,0.18), transparent 65%)",
+    }}
+  >
+    <div className="text-cyan-300 text-6xl mb-6 mx-auto transition-transform duration-300 group-hover:scale-110">
+      {icon}
+    </div>
+
+    <h2 className="text-2xl font-bold mb-3">{title}</h2>
+    <p className="text-gray-400 text-sm leading-relaxed">{description}</p>
+
+    {hovered === title && (
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2
+                      bg-cyan-600 text-white text-xs px-3 py-1
+                      rounded-full shadow-md">
+        Click to continue
+      </div>
+    )}
+  </div>
+);
 
 export default DarkThemeCards;

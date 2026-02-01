@@ -2,10 +2,10 @@
 const mongoose = require("mongoose");
 const express = require("express");
 const router = express.Router();
-const ClubHeadPost = require("../models/ClubHeadPost");
-const authenticateToken = require("../middleware/authenticateToken");
-const ClubHeadProfile = require("../models/ClubHeadProfile");
-const User = require("../models/User");
+const ClubHeadPost = require("../../models/ClubHeadPost");
+const authenticateToken = require("../../middleware/authenticateToken");
+const ClubHeadProfile = require("../../models/ClubHeadProfile");
+const User = require("../../models/User");
 const multer = require("multer");
 
 const storage = multer.memoryStorage();

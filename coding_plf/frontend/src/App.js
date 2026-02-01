@@ -23,7 +23,9 @@ import CollegeCommunity from "./pages/CollegeProfile/CollegeCommunite";
 import CollegeProfile from "./pages/CollegeProfile/CollegeProfile";
 import CollegePostPage from "./pages/CollegeProfile/CollegePost";
 import CollegePassword from "./pages/CollegeProfile/Collegepassword";
-
+// import HomePageManager from "./pages/CollegeProfile/HomePageCMS";
+import CollegeAdminConsole from "./pages/CollegeProfile/CollegeDashboard";
+import AboutUs from "./pages/AboutUs";
 /* =======================
    Layout & Utils
 ======================= */
@@ -35,180 +37,198 @@ import ProtectedRoute from "./components/ProtectedRoute";
 ======================= */
 import FullScreenLoader from "./components/FullScreenLoader";
 
-/* =======================
-   App Component
-======================= */
 const App = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(true);
 
-  /* 🔁 Show loader on route change */
+  /* 🔁 Loader on route change */
   useEffect(() => {
     setLoading(true);
 
-    const timeout = setTimeout(() => {
+    const timer = setTimeout(() => {
       setLoading(false);
-    }, 400); // adjust animation delay if needed
+    }, 400);
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timer);
   }, [location]);
 
+  // ⛔ DO NOT render routes while loading
+  if (loading) {
+    return <FullScreenLoader />;
+  }
+
   return (
-    <>
-      {/* Global Loader */}
-      {loading && <FullScreenLoader />}
+    <Routes>
+      {/* =======================
+         Public Routes
+      ======================== */}
+      <Route path="/" element={<HomePage />} />
+      <Route path="/aboutus" element={<AboutUs />} />
+      <Route path="/Login" element={<OptPageSignin />} />
+      <Route path="/SignUp" element={<OptPageSignin />} />
 
-      <Routes>
-        {/* =======================
-           Public Routes
-        ======================== */}
-        <Route path="/" element={<HomePage />} />
-        <Route path="/SignUp" element={<OptPageSignin />} />
-        <Route path="/Login" element={<OptPageSignin />} />
 
-        <Route
-          path="/CollegeLoginRegister"
-          element={<LoginRegisterPageCollege />}
-        />
-        <Route
-          path="/StudentLoginRegister"
-          element={<LoginRegisterPageStudent />}
-        />
-        <Route
-          path="/ClubHeadLoginRegister"
-          element={<LoginRegisterPageClub />}
-        />
+      <Route path="/CollegeLoginRegister" element={<LoginRegisterPageCollege />} />
+      <Route path="/StudentLoginRegister" element={<LoginRegisterPageStudent />} />
+      <Route path="/ClubHeadLoginRegister" element={<LoginRegisterPageClub />} />
 
-        {/* =======================
-           Student Routes
-        ======================== */}
-        <Route
-          path="/student-community"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="student">
-                <StudentCommunity />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      {/* =======================
+         Student Routes
+      ======================== */}
+      <Route
+        path="/student-community"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="student">
+              <StudentCommunity />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/student-profile"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="student">
-                <StudentProfile />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/student-profile"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="student">
+              <StudentProfile />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/student-questions"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="student">
-                <StudentQuestions />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/student-questions"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="student">
+              <StudentQuestions />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* =======================
-           Club Routes
-        ======================== */}
-        <Route
-          path="/club-community"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="club">
-                <ClubCommunity />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      {/* =======================
+         Club Routes
+      ======================== */}
+      <Route
+        path="/club-community"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="club">
+              <ClubCommunity />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/club-profile"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="club">
-                <ClubProfile />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/club-profile"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="club">
+              <ClubProfile />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/club-posts"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="club">
-                <ClubPostPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/club-team"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="club">
-                <ClubTeamManagement />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/club-posts"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="club">
+              <ClubPostPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        {/* =======================
-           College Routes
-        ======================== */}
-        <Route
-          path="/college-community"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="college">
-                <CollegeCommunity />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/club-team"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="club">
+              <ClubTeamManagement />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/college-profile"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="college">
-                <CollegeProfile />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      {/* =======================
+         College Routes
+      ======================== */}
+      <Route
+        path="/college-community"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <CollegeCommunity />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/college-post"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="college">
-                <CollegePostPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
+      <Route
+        path="/college-dashboard"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <CollegeAdminConsole />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
 
-        <Route
-          path="/college-password"
-          element={
-            <ProtectedRoute>
-              <AppLayout role="college">
-                <CollegePassword />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
-    </>
+      <Route
+        path="/college-profile"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <CollegeProfile />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/college-post"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <CollegePostPage />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* <Route
+        path="/college-homepage"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <HomePageManager />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      /> */}
+
+      <Route
+        path="/college-password"
+        element={
+          <ProtectedRoute>
+            <AppLayout role="college">
+              <CollegePassword />
+            </AppLayout>
+          </ProtectedRoute>
+        }
+      />
+
+      {/* =======================
+         Fallback
+      ======================== */}
+      <Route path="*" element={<HomePage />} />
+    </Routes>
   );
 };
 

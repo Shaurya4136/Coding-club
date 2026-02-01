@@ -3,6 +3,7 @@ import {
   FaClipboardList,
   FaUserTie,
   FaUser,
+  FaHome,
   FaCalendarAlt,
   FaBullhorn,
   FaChartLine,
@@ -16,14 +17,14 @@ export const sidebarConfig = {
   ],
 
   club: [
-    { label: "Dashboard", path: "/club-dashboard", icon: FaChartLine },
+    // { label: "Dashboard", path: "/club-dashboard", icon: FaChartLine },
     { label: "Community", path: "/club-community", icon: FaUsers },
     { label: "Club Posts", path: "/club-posts", icon: FaBullhorn },
 
     // 🔥 NEW OPTIONS FOR CLUB HEAD
-    { label: "All Members", path: "/club-members", icon: FaUserTie },
+    // { label: "All Members", path: "/club-members", icon: FaUserTie },
     { label: "Team Management", path: "/club-team", icon: FaUsers },
-    { label: "Events", path: "/club-events", icon: FaCalendarAlt },
+    // { label: "Events", path: "/club-events", icon: FaCalendarAlt },
 
     { label: "Profile", path: "/club-profile", icon: FaUser },
   ],
@@ -31,7 +32,12 @@ export const sidebarConfig = {
   college: [
     { label: "Dashboard", path: "/college-dashboard", icon: FaChartLine },
     { label: "Community", path: "/college-community", icon: FaUsers },
-    { label: "Manage Clubs", path: "/college-clubs", icon: FaClipboardList },
+    { label: "Password Management", path: "/college-password", icon: FaClipboardList },
     { label: "Profile", path: "/college-profile", icon: FaUser },
+    {
+  label: "Home Page",
+  path: "/college-homepage",
+  icon: FaHome
+},
   ],
 };

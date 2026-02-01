@@ -4,31 +4,56 @@ import axios from 'axios';
 import Footer from '../components/Footer';
 import CommunitySection from '../components/CommunitySectionHomepage';
 import video from "../assets/HomePage/video1.mp4";
+import CodeEditor from "../components/Compiler";
+import { useLocation } from "react-router-dom";
+
 
 const HomePage = () => {
-  const [language, setLanguage] = useState('python3');
-  const [code, setCode] = useState('');
-  const [output, setOutput] = useState('');
+  
   const [gradientPositions, setGradientPositions] = useState({});
   const eventsRef = useRef(null);
   const [isHovered, setIsHovered] = useState(false);
+const [openCard, setOpenCard] = useState(null);
+const cardsRef = useRef(null);
 
-  const handleLanguageChange = (event) => {
-    setLanguage(event.target.value);
-  };
-
-  const handleCodeChange = (event) => {
-    setCode(event.target.value);
-  };
-
-  const handleRunCode = async () => {
-    try {
-      const response = await axios.post('http://localhost:5000/', { language, code });
-      setOutput(response.data.output);
-    } catch (error) {
-      setOutput('Error: ' + error.message);
+const location = useLocation();
+useEffect(() => {
+  const handleOutsideTap = (e) => {
+    if (cardsRef.current && !cardsRef.current.contains(e.target)) {
+      setOpenCard(null);
     }
   };
+
+  document.addEventListener("mousedown", handleOutsideTap);
+  document.addEventListener("touchstart", handleOutsideTap);
+
+  return () => {
+    document.removeEventListener("mousedown", handleOutsideTap);
+    document.removeEventListener("touchstart", handleOutsideTap);
+  };
+}, []);
+
+useEffect(() => {
+  if (location.state?.scrollTo) {
+    const el = document.getElementById(location.state.scrollTo);
+    if (el) {
+      setTimeout(() => {
+        el.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
+  }
+}, [location]);
+
+
+ <CodeEditor
+  languages={[
+    { value: "python3", label: "Python 3" },
+    { value: "javascript", label: "JavaScript" },
+    { value: "java", label: "Java" },
+    { value: "cpp", label: "C++" },
+    { value: "php", label: "PHP" },
+  ]}
+/>
 
   const handleMouseMove = (e, cardIndex) => {
     const card = e.currentTarget.getBoundingClientRect();
@@ -60,6 +85,80 @@ const HomePage = () => {
     return () => cancelAnimationFrame(scrollInterval);
   }, [isHovered]);
         
+  const [formData, setFormData] = useState({
+  name: "",
+  email: "",
+  message: "",
+});
+const [submitted, setSubmitted] = useState(false);
+const [loading, setLoading] = useState(false);
+
+const handleChange = (e) => {
+  setFormData({ ...formData, [e.target.name]: e.target.value });
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+
+  try {
+    await axios.post("http://localhost:5000/api/contact", formData);
+    setSubmitted(true);
+    setFormData({ name: "", email: "", message: "" });
+  } catch (err) {
+    alert("Something went wrong. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+const events = [
+  {
+    title: "Hackathon 2026",
+    date: "12 March 2026",
+    location: "Main Auditorium",
+    description:
+      "A 24-hour hackathon where students build innovative tech solutions using modern frameworks and APIs.",
+  },
+  {
+    title: "UI/UX Design Bootcamp",
+    date: "20 March 2026",
+    location: "Design Lab",
+    description:
+      "Hands-on UI/UX workshop focusing on user research, wireframing, and interactive prototypes.",
+  },
+  {
+    title: "Web Development Workshop",
+    date: "28 March 2026",
+    location: "Computer Lab 2",
+    description:
+      "Learn full-stack web development using React, Node.js, Express, and MongoDB.",
+  },
+  {
+    title: "AI & ML Seminar",
+    date: "5 April 2026",
+    location: "Seminar Hall",
+    description:
+      "Industry experts discuss real-world applications of Artificial Intelligence and Machine Learning.",
+  },
+  {
+    title: "Competitive Coding Contest",
+    date: "10 April 2026",
+    location: "Online",
+    description:
+      "Test your problem-solving skills with timed coding challenges and leaderboard rankings.",
+  },
+  {
+    title: "Startup Talk",
+    date: "18 April 2026",
+    location: "Conference Room",
+    description:
+      "Founders share insights on building startups, funding, and product-market fit.",
+  },
+];
+
+
 
   return (
     <div>
@@ -102,42 +201,25 @@ const HomePage = () => {
 
 
       {/* Code Editor Section */}
-      <section id="editor" className="bg-gray-900  text-white p-16">
-        <h1 className="text-3xl font-bold mb-8">Programiz Online Compiler</h1>
-        <div className="p-6 bg-gray-800 rounded-lg  shadow-lg transform transition-transform duration-300 hover:shadow-[0_0_30px_5px_rgba(255,0,0,0.5),0_0_30px_5px_rgba(0,255,0,0.5),0_0_30px_5px_rgba(0,0,255,0.5)] hover:scale-105">
-          <div className="md:flex md:w-full">
-            <div className="md:w-2/3 p-4 bg-gray-700 rounded-lg">
-              <select value={language} onChange={handleLanguageChange} className="mb-4 p-2 bg-gray-600 text-white rounded">
-                <option value="python3">Python 3</option>
-                <option value="javascript">JavaScript</option>
-                <option value="java">Java</option>
-                <option value="cpp">C++</option>
-                <option value="csharp">C#</option>
-                <option value="ruby">Ruby</option>
-                <option value="php">PHP</option>
-              </select>
-              <textarea
-                value={code}
-                onChange={handleCodeChange}
-                rows="10"
-                cols="50"
-                className="w-full p-4 bg-gray-600 text-white rounded"
-                placeholder="Write your code here..."
-              ></textarea>
-              <button
-                onClick={handleRunCode}
-                className="mt-4 bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out"
-              >
-                Run
-              </button>
-            </div>
-            <div className="md:w-1/3 md:ml-4 p-4 bg-gray-700 rounded-lg">
-              <p className="text-lg font-semibold">Output:</p>
-              <pre className="whitespace-pre-wrap">{output}</pre>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* ================= COMPILER SECTION ================= */}
+<section id="editor" className="bg-gray-950 py-20 px-6">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-4xl font-bold text-white text-center mb-10">
+      Online Compiler
+    </h2>
+
+    <CodeEditor
+      languages={[
+        { value: "python3", label: "Python 3" },
+        { value: "javascript", label: "JavaScript" },
+        { value: "java", label: "Java" },
+        { value: "cpp", label: "C++" },
+        { value: "php", label: "PHP" },
+      ]}
+    />
+  </div>
+</section>
+
 
       {/* Welcome Section */}
       <section id="welcome" className="relative bg-cover bg-center p-20 text-center text-white" style={{ backgroundImage: 'url(/path/to/your/background.jpg)' }}>
@@ -152,58 +234,96 @@ const HomePage = () => {
             Discover endless opportunities at Oxnard College, where education meets innovation.
           </p>
 
-          <button className="mt-4 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-yellow-300 transition duration-300 ease-in-out">
-            About Oxnard College
+          <button className="mt-4 bg-white text-black px-6 py-3 rounded-full font-semibold shadow-lg hover:bg-yellow-300 transition duration-300 ease-in-out" onClick={() => window.location.href = '/aboutus'}>
+           About Us
           </button>
         </div>
       </section>
 
       {/* Features Section */}
       <section id="explore" className="bg-gray-900 text-white p-16 text-left">
-        <h2 className="text-3xl font-bold mb-8 text-center">Explore Our Features</h2>
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[1, 2, 3, 4].map((cardIndex) => (
-            <div
-              key={cardIndex}
-              className={`relative group bg-black p-6 rounded-lg shadow-lg cursor-pointer transform transition-transform duration-300 
-                ${cardIndex === 1 ? 'hover:shadow-[0_0_30px_5px_rgba(255,165,0,0.5)] hover:scale-105' : ''}
-                ${cardIndex === 2 ? 'hover:shadow-[0_0_30px_5px_rgba(255,20,147,0.5)] hover:scale-105' : ''}
-                ${cardIndex === 3 ? 'hover:shadow-[0_0_30px_5px_rgba(0,255,0,0.5)] hover:scale-105' : ''}
-                ${cardIndex === 4 ? 'hover:shadow-[0_0_30px_5px_rgba(0,0,255,0.5)] hover:scale-105' : ''}`}
-              onMouseMove={(e) => handleMouseMove(e, cardIndex)}
-              style={{
-                background: `radial-gradient(circle at ${gradientPositions[cardIndex]?.x || 0}px ${gradientPositions[cardIndex]?.y || 0}px, rgba(0, 102, 255, 0.3), transparent)`,
-              }}
+  <h2 className="text-3xl font-bold mb-8 text-center">
+    Explore Our Features
+  </h2>
+
+  <div
+    ref={cardsRef}
+    className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+  >
+    {[1, 2, 3, 4].map((cardIndex) => {
+      const isOpen = openCard === cardIndex;
+
+      return (
+        <div
+          key={cardIndex}
+          className={`relative bg-black p-6 rounded-lg shadow-lg
+            transform transition-transform duration-300 overflow-hidden
+            ${cardIndex === 1 ? "hover:shadow-[0_0_30px_5px_rgba(255,165,0,0.5)] hover:scale-105" : ""}
+            ${cardIndex === 2 ? "hover:shadow-[0_0_30px_5px_rgba(255,20,147,0.5)] hover:scale-105" : ""}
+            ${cardIndex === 3 ? "hover:shadow-[0_0_30px_5px_rgba(0,255,0,0.5)] hover:scale-105" : ""}
+            ${cardIndex === 4 ? "hover:shadow-[0_0_30px_5px_rgba(0,0,255,0.5)] hover:scale-105" : ""}`}
+          onMouseMove={(e) => handleMouseMove(e, cardIndex)}
+          style={{
+            background: `radial-gradient(circle at ${
+              gradientPositions[cardIndex]?.x || 0
+            }px ${gradientPositions[cardIndex]?.y || 0}px, rgba(0, 102, 255, 0.3), transparent)`,
+          }}
+        >
+          {/* Corner Icon — ONLY CONTROL */}
+          <div
+            className="absolute top-2 right-2 z-20"
+            onMouseEnter={() => setOpenCard(cardIndex)} // desktop
+            onClick={(e) => {
+              e.stopPropagation(); // 🔑 prevents instant close
+              setOpenCard(isOpen ? null : cardIndex);
+            }}
+          >
+            <svg
+              className={`w-6 h-6 cursor-pointer transition-transform duration-300
+                ${isOpen ? "rotate-90" : ""}
+                ${cardIndex === 1 ? "text-orange-500" : ""}
+                ${cardIndex === 2 ? "text-pink-500" : ""}
+                ${cardIndex === 3 ? "text-green-500" : ""}
+                ${cardIndex === 4 ? "text-blue-500" : ""}`}
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              <div className="absolute top-2 right-2">
-                <svg
-                  className={`w-6 h-6 
-                    ${cardIndex === 1 ? 'text-orange-500' : ''}
-                    ${cardIndex === 2 ? 'text-pink-500' : ''}
-                    ${cardIndex === 3 ? 'text-green-500' : ''}
-                    ${cardIndex === 4 ? 'text-blue-500' : ''}`}
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  {cardIndex === 1 ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                  ) : cardIndex === 2 ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-                  ) : cardIndex === 3 ? (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
-                  ) : (
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7l8 10M8 17l8-10" />
-                  )}
-                </svg>
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Feature {cardIndex}</h3>
-              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-            </div>
-          ))}
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </div>
+
+          {/* Content (VERTICAL OPEN ONLY) */}
+          <div
+            className={`transition-[max-height] duration-500 ease-in-out
+              ${isOpen ? "max-h-[280px]" : "max-h-[120px]"}`}
+          >
+            <h3 className="text-lg font-semibold mb-2">
+              Feature {cardIndex}
+            </h3>
+
+            <p
+              className={`whitespace-normal break-words transition-all duration-300
+                ${isOpen ? "" : "line-clamp-2"}`}
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+          </div>
         </div>
-      </section>
+      );
+    })}
+  </div>
+</section>
+
+
+
       <section>
         <div>
             {/* Community Section */}
@@ -212,86 +332,89 @@ const HomePage = () => {
       </section>
 
       {/* Event Card */}
-      <section className="bg-gray-900 text-white py-16">
-      <div className="container mx-auto">
-        <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Upcoming Events</h2>
-        <div
-          ref={eventsRef}
-          className="flex space-x-8 overflow-x-auto scrollbar-hide"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          style={{ whiteSpace: 'nowrap' }}  // Keep items in a row
-        >
-          {/* Original Event List */}
-          {[...Array(6)].map((_, index) => (
-            <div
-              key={index}
-              className="min-w-[300px] relative bg-black p-6 rounded-lg shadow-lg overflow-hidden group transform transition-all duration-500 hover:scale-105 hover:shadow-xl"
-            >
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${
-                  index % 3 === 0
-                    ? 'from-indigo-600 via-purple-600 to-pink-500'
-                    : index % 3 === 1
-                    ? 'from-teal-500 via-green-600 to-blue-500'
-                    : 'from-yellow-500 via-orange-600 to-red-500'
-                } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-              ></div>
-              <div className="relative z-10 p-6">
-                <h3 className="text-2xl font-bold mb-2 transition-transform duration-300 transform group-hover:scale-110">
-                  Event Name {index + 1}
-                </h3>
-                <p className="text-gray-300 mb-2">Date: Date {index + 1}</p>
-                <p className="text-gray-300 mb-2">Location: Location {index + 1}</p>
-                <p className="text-gray-400 mb-4">
-                  A brief description of the event. This can include the purpose, activities, and any other relevant details.
-                </p>
-                <a
-                  href="#"
-                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-transform transform hover:scale-110"
-                >
-                  Learn More
-                </a>
-              </div>
-            </div>
-          ))}
+    <section className="bg-gray-900 text-white py-16" id="events">
+  <div className="container mx-auto px-4">
+    <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
+      Upcoming Events
+    </h2>
 
-          {/* Duplicate Event List for Looping */}
-          {[...Array(6)].map((_, index) => (
+    <div
+      ref={eventsRef}
+      className="flex gap-6 overflow-x-auto scrollbar-hide"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      style={{ whiteSpace: "nowrap" }}
+    >
+      {[...events, ...events].map((event, index) => {
+        const isOpen = openCard === index;
+
+        return (
+          <div
+            key={index}
+            onClick={() => setOpenCard(isOpen ? null : index)}
+            className="min-w-[260px] sm:min-w-[300px] md:min-w-[340px]
+                       relative bg-black rounded-xl shadow-lg overflow-hidden
+                       transition-all duration-500 cursor-pointer select-none"
+          >
+            {/* Gradient (CLICK FIX HERE) */}
             <div
-              key={index}
-              className="min-w-[300px] relative bg-black p-6 rounded-lg shadow-lg overflow-hidden group transform transition-all duration-500 hover:scale-105 hover:shadow-xl"
+              className={`absolute inset-0 bg-gradient-to-br ${
+                index % 3 === 0
+                  ? "from-indigo-600 via-purple-600 to-pink-500"
+                  : index % 3 === 1
+                  ? "from-teal-500 via-green-600 to-blue-500"
+                  : "from-yellow-500 via-orange-600 to-red-500"
+              } opacity-30 pointer-events-none`}
+            />
+
+            {/* Content */}
+            <div
+              className={`relative z-10 p-4 sm:p-5 md:p-6 flex flex-col
+                          transition-[max-height] duration-500 ease-in-out
+                          ${isOpen ? "max-h-[1000px]" : "max-h-[320px]"}`}
             >
-              <div
-                className={`absolute inset-0 bg-gradient-to-br ${
-                  index % 3 === 0
-                    ? 'from-indigo-600 via-purple-600 to-pink-500'
-                    : index % 3 === 1
-                    ? 'from-teal-500 via-green-600 to-blue-500'
-                    : 'from-yellow-500 via-orange-600 to-red-500'
-                } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
-              ></div>
-              <div className="relative z-10 p-6">
-                <h3 className="text-2xl font-bold mb-2 transition-transform duration-300 transform group-hover:scale-110">
-                  Event Name {index + 1}
-                </h3>
-                <p className="text-gray-300 mb-2">Date: Date {index + 1}</p>
-                <p className="text-gray-300 mb-2">Location: Location {index + 1}</p>
-                <p className="text-gray-400 mb-4">
-                  A brief description of the event. This can include the purpose, activities, and any other relevant details.
-                </p>
-                <a
-                  href="#"
-                  className="inline-block bg-blue-600 text-white px-4 py-2 rounded-lg shadow-lg transition-transform transform hover:scale-110"
-                >
-                  Learn More
-                </a>
-              </div>
+              {/* Title */}
+              <h3 className="font-bold mb-2 text-lg sm:text-xl md:text-2xl">
+                {event.title}
+              </h3>
+
+              {/* Meta */}
+              <p className="text-gray-300 text-sm sm:text-base mb-1">
+                📅 {event.date}
+              </p>
+              <p className="text-gray-300 text-sm sm:text-base mb-2">
+                📍 {event.location}
+              </p>
+
+              {/* Description */}
+              <p
+                className={`text-gray-400 text-sm sm:text-base leading-relaxed
+                            whitespace-normal break-words
+                            transition-all duration-300
+                            ${isOpen ? "mb-4" : "line-clamp-4 mb-4"}`}
+              >
+                {event.description}
+              </p>
+
+              {/* Hint */}
+              <span className="text-xs text-gray-500 mt-auto">
+                {isOpen ? "Click to collapse" : "Click to expand"}
+              </span>
             </div>
-          ))}
-        </div>
-      </div>
-    </section>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
 
       {/* Contact Section */}
       <section id="contact" className="bg-gray-900 text-white p-16">
@@ -313,23 +436,61 @@ const HomePage = () => {
               </div>
               <div className="w-full md:w-1/2">
                 <h3 className="text-xl font-semibold mb-4">Contact Us</h3>
-                <form>
-                  <div className="mb-4">
-                    <label className="block text-gray-400 mb-2">Name</label>
-                    <input type="text" className="w-full p-3 bg-gray-800 text-white rounded" placeholder="Your Name" />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-400 mb-2">Email</label>
-                    <input type="email" className="w-full p-3 bg-gray-800 text-white rounded" placeholder="Your Email" />
-                  </div>
-                  <div className="mb-4">
-                    <label className="block text-gray-400 mb-2">Message</label>
-                    <textarea className="w-full p-3 bg-gray-800 text-white rounded" rows="4" placeholder="Your Message"></textarea>
-                  </div>
-                  <button type="submit" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition duration-300 ease-in-out">
-                    Send Message
-                  </button>
-                </form>
+                <form onSubmit={handleSubmit}>
+  {submitted && (
+    <p className="mb-4 text-green-400 font-semibold">
+      ✅ Thanks! We will contact you shortly.
+    </p>
+  )}
+
+  <div className="mb-4">
+    <label className="block text-gray-400 mb-2">Name</label>
+    <input
+      type="text"
+      name="name"
+      value={formData.name}
+      onChange={handleChange}
+      required
+      className="w-full p-3 bg-gray-800 text-white rounded"
+      placeholder="Your Name"
+    />
+  </div>
+
+  <div className="mb-4">
+    <label className="block text-gray-400 mb-2">Email</label>
+    <input
+      type="email"
+      name="email"
+      value={formData.email}
+      onChange={handleChange}
+      required
+      className="w-full p-3 bg-gray-800 text-white rounded"
+      placeholder="Your Email"
+    />
+  </div>
+
+  <div className="mb-4">
+    <label className="block text-gray-400 mb-2">Message</label>
+    <textarea
+      name="message"
+      value={formData.message}
+      onChange={handleChange}
+      required
+      rows="4"
+      className="w-full p-3 bg-gray-800 text-white rounded"
+      placeholder="Your Message"
+    />
+  </div>
+
+  <button
+    type="submit"
+    disabled={loading}
+    className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-500 transition"
+  >
+    {loading ? "Sending..." : "Send Message"}
+  </button>
+</form>
+
               </div>
             </div>
           </div>

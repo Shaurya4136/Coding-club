@@ -1,17 +1,27 @@
-// src/components/ProtectedRoute.js
-import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const ProtectedRoute = ({ children }) => {
-  // Check if the user is authenticated
-  const isAuthenticated = localStorage.getItem('token'); // You can use your authentication logic here
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // If not authenticated, redirect to the login page
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsAuthenticated(!!token);
+    setCheckingAuth(false);
+  }, []);
+
+  // ⏳ Wait until auth check finishes
+  if (checkingAuth) {
+    return null; // or loader if you want
+  }
+
+  // ❌ Not authenticated
   if (!isAuthenticated) {
     return <Navigate to="/Login" replace />;
   }
 
-  // If authenticated, render the children (protected component)
+  // ✅ Authenticated
   return children;
 };
 

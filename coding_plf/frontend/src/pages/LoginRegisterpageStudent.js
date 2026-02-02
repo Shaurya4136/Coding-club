@@ -17,7 +17,7 @@ const LoginRegisterPageStudent = () => {
  const handleLogin = async (e) => {
   e.preventDefault();
   try {
-    const response = await axios.post("http://localhost:5000/auth/login", {
+    const response = await axios.post("https://coding-club-1.onrender.com/auth/login", {
       email,
       password,
       role, // Include role in the login request
@@ -46,7 +46,7 @@ console.log("PROFILE_URL:", PROFILE_URL);
   const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/auth/register", {
+      const response = await axios.post("https://coding-club-1.onrender.com/auth/register", {
         name,
         email,
         password,

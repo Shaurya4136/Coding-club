@@ -10,7 +10,7 @@ import {
 } from "recharts";
 
 /* ================= CONFIG ================= */
-const API = "http://localhost:5000/api/college";
+const API = "https://coding-club-1.onrender.com/api/college";
 
 const authFetch = (url, options = {}) =>
   fetch(url, {
@@ -71,7 +71,7 @@ export default function CollegeAdminConsole() {
 
   /* ================= REALTIME ================= */
   useEffect(() => {
-    const socket = io("http://localhost:5000");
+    const socket = io("https://coding-club-1.onrender.com");
 
     socket.on("notification", () => {
       setNotificationsSeen(false); // 🔔 show badge again

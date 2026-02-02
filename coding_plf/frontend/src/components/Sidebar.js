@@ -30,7 +30,7 @@ useEffect(() => {
       const token = localStorage.getItem("token");
       if (!token || !role) return;
 
-      const res = await axios.get("http://localhost:5000/api/profile", {
+      const res = await axios.get("https://coding-club-1.onrender.com/api/profile", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

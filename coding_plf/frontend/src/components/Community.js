@@ -286,7 +286,7 @@ const Community = () => {
   const fetchFeed = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/api/feed/all", {
+      const res = await axios.get("https://coding-club-1.onrender.com/api/feed/all", {
         headers: { Authorization: `Bearer ${token}` },
       });
       const normalized = res.data.map(normalizeItem);
@@ -352,12 +352,12 @@ const Community = () => {
       let apiRoute;
       if (item.postType === "student") {
         apiRoute = isAnswer
-          ? `http://localhost:5000/api/student-questions/${item._id}/answers/${id}/like`
-          : `http://localhost:5000/api/student-questions/${item._id}/like`;
+          ? `https://coding-club-1.onrender.com/api/student-questions/${item._id}/answers/${id}/like`
+          : `https://coding-club-1.onrender.com/api/student-questions/${item._id}/like`;
       } else {
         apiRoute = isAnswer
-          ? `http://localhost:5000/api/clubheadposts/${item._id}/comments/${id}/like`
-          : `http://localhost:5000/api/clubheadposts/${item._id}/like`;
+          ? `https://coding-club-1.onrender.com/api/clubheadposts/${item._id}/comments/${id}/like`
+          : `https://coding-club-1.onrender.com/api/clubheadposts/${item._id}/like`;
       }
 
       await axios.put(apiRoute, {}, { headers: { Authorization: `Bearer ${token}` } });
@@ -372,8 +372,8 @@ const Community = () => {
     if (!text) return;
     try {
       const apiRoute = item.isStudent
-        ? `http://localhost:5000/api/student-questions/${item._id}/answers`
-        : `http://localhost:5000/api/clubheadposts/${item._id}/comments`;
+        ? `https://coding-club-1.onrender.com/api/student-questions/${item._id}/answers`
+        : `https://coding-club-1.onrender.com/api/clubheadposts/${item._id}/comments`;
       const body = item.isStudent ? { answer: text } : { comment: text };
       await axios.post(apiRoute, body, {
         headers: { Authorization: `Bearer ${token}` },
@@ -394,9 +394,9 @@ const Community = () => {
     try {
       let apiRoute;
       if (item.isStudent) {
-        apiRoute = `http://localhost:5000/api/feed/${item._id}/answers/${parent._id}/replies`;
+        apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/answers/${parent._id}/replies`;
       } else {
-        apiRoute = `http://localhost:5000/api/feed/${item._id}/comments/${parent._id}/replies`;
+        apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${parent._id}/replies`;
       }
 
       await axios.post(
@@ -416,9 +416,9 @@ const Community = () => {
     try {
       let apiRoute;
       if (item.isStudent) {
-        apiRoute = `http://localhost:5000/api/feed/${item._id}/answers/${parentId}/replies/${replyId}/like`;
+        apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/answers/${parentId}/replies/${replyId}/like`;
       } else {
-        apiRoute = `http://localhost:5000/api/feed/${item._id}/comments/${parentId}/replies/${replyId}/like`;
+        apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${parentId}/replies/${replyId}/like`;
       }
 
       await axios.put(apiRoute, {}, { headers: { Authorization: `Bearer ${token}` } });
@@ -435,7 +435,7 @@ const Community = () => {
     }
 
     try {
-      const apiRoute = `http://localhost:5000/api/feed/${item._id}/comments/${commentId}`;
+      const apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${commentId}`;
       const body = { comment: editText };
 
       const res = await axios.put(apiRoute, body, {
@@ -462,7 +462,7 @@ const Community = () => {
 
   try {
     // ✅ Same route for student answers AND club comments
-    const apiRoute = `http://localhost:5000/api/feed/${item._id}/comments/${commentId}`;
+    const apiRoute = `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${commentId}`;
 
     await axios.delete(apiRoute, {
       headers: { Authorization: `Bearer ${token}` },
@@ -483,8 +483,8 @@ const Community = () => {
     }
     try {
       const apiRoute = item.isStudent
-        ? `http://localhost:5000/api/feed/${item._id}/answers/${parentId}/replies/${replyId}`
-        : `http://localhost:5000/api/feed/${item._id}/comments/${parentId}/replies/${replyId}`;
+        ? `https://coding-club-1.onrender.com/api/feed/${item._id}/answers/${parentId}/replies/${replyId}`
+        : `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${parentId}/replies/${replyId}`;
 
       const body = { comment: editText };
 
@@ -512,8 +512,8 @@ const Community = () => {
     if (!window.confirm("Are you sure you want to delete this reply?")) return;
     try {
       const apiRoute = item.isStudent
-        ? `http://localhost:5000/api/feed/${item._id}/answers/${parentId}/replies/${replyId}`
-        : `http://localhost:5000/api/feed/${item._id}/comments/${parentId}/replies/${replyId}`;
+        ? `https://coding-club-1.onrender.com/api/feed/${item._id}/answers/${parentId}/replies/${replyId}`
+        : `https://coding-club-1.onrender.com/api/feed/${item._id}/comments/${parentId}/replies/${replyId}`;
 
       await axios.delete(apiRoute, {
         headers: { Authorization: `Bearer ${token}` },
@@ -534,8 +534,8 @@ const Community = () => {
 
     try {
       const apiRoute = item.isStudent
-        ? `http://localhost:5000/api/student-questions/${item._id}`
-        : `http://localhost:5000/api/clubheadposts/${item._id}`;
+        ? `https://coding-club-1.onrender.com/api/student-questions/${item._id}`
+        : `https://coding-club-1.onrender.com/api/clubheadposts/${item._id}`;
 
       const body = item.isStudent
         ? { question: postEditText }
@@ -565,8 +565,8 @@ const Community = () => {
 
     try {
       const apiRoute = item.isStudent
-        ? `http://localhost:5000/api/student-questions/${item._id}`
-        : `http://localhost:5000/api/clubheadposts/${item._id}`;
+        ? `https://coding-club-1.onrender.com/api/student-questions/${item._id}`
+        : `https://coding-club-1.onrender.com/api/clubheadposts/${item._id}`;
 
       await axios.delete(apiRoute, {
         headers: { Authorization: `Bearer ${token}` },

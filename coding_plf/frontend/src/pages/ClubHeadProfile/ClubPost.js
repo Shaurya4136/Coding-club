@@ -45,7 +45,7 @@ const ClubPostPage = () => {
   const fetchMyPosts = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/clubheadposts/mine",
+        "https://coding-club-1.onrender.com/api/clubheadposts/mine",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -60,7 +60,7 @@ const ClubPostPage = () => {
   const fetchMyComments = async () => {
     try {
       const res = await axios.get(
-        "http://localhost:5000/api/clubheadposts/comments/mine",
+        "https://coding-club-1.onrender.com/api/clubheadposts/comments/mine",
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -102,7 +102,7 @@ const ClubPostPage = () => {
 
       if (editId) {
         await axios.put(
-          `http://localhost:5000/api/clubheadposts/${editId}`,
+          `https://coding-club-1.onrender.com/api/clubheadposts/${editId}`,
           formData,
           {
             headers: {
@@ -113,7 +113,7 @@ const ClubPostPage = () => {
         );
         alert("Event updated!");
       } else {
-        await axios.post("http://localhost:5000/api/clubheadposts", formData, {
+        await axios.post("https://coding-club-1.onrender.com/api/clubheadposts", formData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -147,7 +147,7 @@ const ClubPostPage = () => {
 
       if (editId) {
         await axios.put(
-          `http://localhost:5000/api/clubheadposts/${editId}`,
+          `https://coding-club-1.onrender.com/api/clubheadposts/${editId}`,
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -156,7 +156,7 @@ const ClubPostPage = () => {
         alert("Question updated!");
       } else {
         await axios.post(
-          "http://localhost:5000/api/clubheadposts",
+          "https://coding-club-1.onrender.com/api/clubheadposts",
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -188,7 +188,7 @@ const ClubPostPage = () => {
 
       if (editId) {
         await axios.put(
-          `http://localhost:5000/api/clubheadposts/${editId}`,
+          `https://coding-club-1.onrender.com/api/clubheadposts/${editId}`,
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -197,7 +197,7 @@ const ClubPostPage = () => {
         alert("Poll updated!");
       } else {
         await axios.post(
-          "http://localhost:5000/api/clubheadposts",
+          "https://coding-club-1.onrender.com/api/clubheadposts",
           payload,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -218,7 +218,7 @@ const ClubPostPage = () => {
   const handleDeletePost = async (id) => {
     if (!window.confirm("Delete this post?")) return;
     try {
-      await axios.delete(`http://localhost:5000/api/clubheadposts/${id}`, {
+      await axios.delete(`https://coding-club-1.onrender.com/api/clubheadposts/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchMyPosts();
@@ -231,7 +231,7 @@ const ClubPostPage = () => {
   const handleLikePost = async (postId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/clubheadposts/${postId}/like`,
+        `https://coding-club-1.onrender.com/api/clubheadposts/${postId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -245,7 +245,7 @@ const ClubPostPage = () => {
   const handleLikeComment = async (postId, commentId) => {
     try {
       await axios.put(
-        `http://localhost:5000/api/clubheadposts/${postId}/comments/${commentId}/like`,
+        `https://coding-club-1.onrender.com/api/clubheadposts/${postId}/comments/${commentId}/like`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -266,7 +266,7 @@ const ClubPostPage = () => {
       // still using clubheadposts route to create;
       // feed /all will read these comments from ClubHeadPost
       await axios.post(
-        `http://localhost:5000/api/clubheadposts/${postId}/comments`,
+        `https://coding-club-1.onrender.com/api/clubheadposts/${postId}/comments`,
         { comment: text },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -288,7 +288,7 @@ const ClubPostPage = () => {
       // ✅ Use same route as Community.js:
       // PUT /api/feed/:postId/comments/:commentId  { comment }
       await axios.put(
-        `http://localhost:5000/api/feed/${editCommentPostId}/comments/${editCommentId}`,
+        `https://coding-club-1.onrender.com/api/feed/${editCommentPostId}/comments/${editCommentId}`,
         { comment: commentText },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -310,7 +310,7 @@ const ClubPostPage = () => {
       // ✅ Use same delete route as Community.js:
       // DELETE /api/feed/:postId/comments/:commentId
       await axios.delete(
-        `http://localhost:5000/api/feed/${postId}/comments/${commentId}`,
+        `https://coding-club-1.onrender.com/api/feed/${postId}/comments/${commentId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

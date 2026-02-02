@@ -102,7 +102,7 @@ const handleSubmit = async (e) => {
   setLoading(true);
 
   try {
-    await axios.post("http://localhost:5000/api/contact", formData);
+    await axios.post("https://coding-club-1.onrender.com/api/contact", formData);
     setSubmitted(true);
     setFormData({ name: "", email: "", message: "" });
   } catch (err) {

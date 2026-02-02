@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-const API = "http://localhost:5000/api/college";
+const API = "https://coding-club-1.onrender.com/api/college";
 
 export default function CollegeAdminConsole() {
   const token = localStorage.getItem("token");

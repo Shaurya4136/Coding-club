@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 
 /* ================= CONFIG ================= */
-const API = "http://localhost:5000/api/profile";
+const API = "https://coding-club-1.onrender.com/api/profile";
 const LOCAL_KEY = "collegeProfile";
 const DEFAULT_AVATAR =
   "https://dummyimage.com/200x200/4f46e5/ffffff&text=College";

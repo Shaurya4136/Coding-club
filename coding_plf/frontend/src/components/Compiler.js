@@ -23,7 +23,7 @@ const CodeEditor = ({ languages, initialLanguage = "python3" }) => {
 
     try {
       const response = await fetch(
-        "http://localhost:5000/api/compiler/run",
+        "https://coding-club-1.onrender.com/api/compiler/run",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

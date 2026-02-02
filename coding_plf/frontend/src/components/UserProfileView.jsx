@@ -15,7 +15,7 @@ const UserProfileModeration = ({ userId }) => {
   useEffect(() => {
     axios
       .get(
-        `http://localhost:5000/api/club/user/${userId}/overview`,
+        `https://coding-club-1.onrender.com/api/club/user/${userId}/overview`,
         { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => setData(res.data))
@@ -68,7 +68,7 @@ const UserProfileModeration = ({ userId }) => {
     if (!reason) return;
 
     await axios.post(
-      "http://localhost:5000/api/club/block-request",
+      "https://coding-club-1.onrender.com/api/club/block-request",
       { userId: data.user._id, reason },
       { headers: { Authorization: `Bearer ${token}` } }
     );

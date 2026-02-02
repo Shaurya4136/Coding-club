@@ -52,7 +52,7 @@ const LoginRegisterPageclub = () => {
     if (!finalRole) return alert("Please select a role.");
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/login", {
+      const res = await axios.post("https://coding-club-1.onrender.com/auth/login", {
         email,
         password,
         role: finalRole, // ✅ FIXED
@@ -75,7 +75,7 @@ const LoginRegisterPageclub = () => {
     if (!finalRole) return alert("Please select a role.");
 
     try {
-      const res = await axios.post("http://localhost:5000/auth/register", {
+      const res = await axios.post("https://coding-club-1.onrender.com/auth/register", {
         name,
         email,
         password,

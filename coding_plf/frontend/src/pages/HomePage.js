@@ -185,8 +185,8 @@ const events = [
             </p>
 
             <div className="mt-10 flex justify-center space-x-6">
-            <button className="bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transform hover:scale-110 transition duration-300 ease-in-out">
-                <i className="fas fa-book-open mr-2"></i> View Courses
+            <button to="/FinalPrj\coding_plf\frontend\src\pages\OptpageSignin.js" className="bg-gradient-to-r from-blue-500 to-teal-400 text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transform hover:scale-110 transition duration-300 ease-in-out">
+                <i className="fas fa-book-open mr-2"></i> Join Us
             </button>
             <button className="bg-gradient-to-r from-red-500 to-pink-400 text-white font-semibold px-6 py-3 md:px-8 md:py-4 rounded-full shadow-lg transform hover:scale-110 transition duration-300 ease-in-out">
                 <i className="fas fa-play-circle mr-2"></i> Watch Video
@@ -272,9 +272,9 @@ const events = [
           {/* Corner Icon — ONLY CONTROL */}
           <div
             className="absolute top-2 right-2 z-20"
-            onMouseEnter={() => setOpenCard(cardIndex)} // desktop
+            onMouseEnter={() => setOpenCard(cardIndex)}
             onClick={(e) => {
-              e.stopPropagation(); // 🔑 prevents instant close
+              e.stopPropagation();
               setOpenCard(isOpen ? null : cardIndex);
             }}
           >
@@ -305,15 +305,27 @@ const events = [
               ${isOpen ? "max-h-[280px]" : "max-h-[120px]"}`}
           >
             <h3 className="text-lg font-semibold mb-2">
-              Feature {cardIndex}
+              {cardIndex === 1 && "Coding Contests & Challenges"}
+              {cardIndex === 2 && "Hands-on Workshops"}
+              {cardIndex === 3 && "Project-Based Learning"}
+              {cardIndex === 4 && "Peer Learning & Mentorship"}
             </h3>
 
             <p
               className={`whitespace-normal break-words transition-all duration-300
                 ${isOpen ? "" : "line-clamp-2"}`}
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              {cardIndex === 1 &&
+                "Participate in regular coding contests and challenges to improve problem-solving skills, logical thinking, and competitive programming experience."}
+
+              {cardIndex === 2 &&
+                "Attend practical workshops on Web Development, DSA, AI/ML, Cloud, and emerging technologies conducted by seniors and mentors."}
+
+              {cardIndex === 3 &&
+                "Work on real-world projects in teams, contribute to open-source initiatives, and build a strong portfolio for internships and placements."}
+
+              {cardIndex === 4 &&
+                "Learn together with peers, receive mentorship from seniors, and grow consistently through collaboration and knowledge sharing."}
             </p>
           </div>
         </div>
@@ -321,6 +333,7 @@ const events = [
     })}
   </div>
 </section>
+
 
 
 
@@ -430,8 +443,8 @@ const events = [
             <div className="flex flex-col md:flex-row">
               <div className="w-full md:w-1/2 pr-4 mb-4 md:mb-0">
                 <h3 className="text-xl font-semibold mb-4">Contact Details</h3>
-                <p className="mb-2">Address: 1234 Street Name, City, Country</p>
-                <p className="mb-2">Phone: +123 456 7890</p>
+                <p className="mb-2">Address: Coding Club Office, Academic Block-B, Allenhouse Institute of Technology, Kanpur, Uttar Pradesh – 208002</p>
+                <p className="mb-2">Phone: +91 98765 43210</p>
                 <p className="mb-2">Email: contact@example.com</p>
               </div>
               <div className="w-full md:w-1/2">

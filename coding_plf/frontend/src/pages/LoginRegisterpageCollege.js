@@ -32,7 +32,7 @@ const LoginRegisterPageCollege = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/auth/login",
+        "https://coding-club-1.onrender.com/auth/login",
         {
           email,
           password,
@@ -72,7 +72,7 @@ const LoginRegisterPageCollege = () => {
 
   //   try {
   //     const response = await axios.post(
-  //       "http://localhost:5000/auth/register",
+  //       "https://coding-club-1.onrender.com/auth/register",
   //       {
   //         name,
   //         email,

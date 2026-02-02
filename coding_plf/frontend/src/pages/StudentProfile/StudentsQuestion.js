@@ -38,7 +38,7 @@ function StudentsQuestion() {
   }, [token]);
 
   const API = axios.create({
-    baseURL: "http://localhost:5000/api/student-questions",
+    baseURL: "https://coding-club-1.onrender.com/api/student-questions",
     headers: { Authorization: `Bearer ${token}` },
   });
 

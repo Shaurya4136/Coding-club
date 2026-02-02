@@ -22,7 +22,7 @@ const CollegePassword = () => {
       const token = localStorage.getItem("token");
 
       const res = await axios.get(
-        "http://localhost:5000/api/college/users",
+        "https://coding-club-1.onrender.com/api/college/users",
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -49,7 +49,7 @@ const CollegePassword = () => {
     }
 
     await axios.put(
-      `http://localhost:5000/api/college/users/${id}/password`,
+      `https://coding-club-1.onrender.com/api/college/users/${id}/password`,
       { password: passwords[id] },
       { headers: { Authorization: `Bearer ${token}` } }
     );

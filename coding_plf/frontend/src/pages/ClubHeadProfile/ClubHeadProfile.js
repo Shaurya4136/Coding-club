@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { FaEdit, FaSignOutAlt, FaKey, FaEnvelope, FaLink, FaUsers,FaUserMinus,FaPlus, FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'https://coding-club-1.onrender.com';
 const PROFILE_URL = process.env.NEXT_PUBLIC_CLUBHEAD_PROFILE_ENDPOINT || `${API_BASE_URL}/api/profile`;
 
 const DEFAULT_PROFILE = {

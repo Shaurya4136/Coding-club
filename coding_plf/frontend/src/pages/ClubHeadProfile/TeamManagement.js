@@ -167,7 +167,7 @@ const TeamManagement = () => {
   const fetchUsers = async () => {
     try {
       setLoadingUsers(true);
-      const res = await axios.get("http://localhost:5000/api/club/team", {
+      const res = await axios.get("https://coding-club-1.onrender.com/api/club/team", {
         params: {
           search,
           role: roleFilter !== "All" ? roleFilter : undefined,
@@ -191,7 +191,7 @@ const TeamManagement = () => {
     try {
       setLoadingProfile(true);
       const res = await axios.get(
-        `http://localhost:5000/api/club/user/${user._id}/overview`,
+        `https://coding-club-1.onrender.com/api/club/user/${user._id}/overview`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setOverview(res.data);
@@ -209,7 +209,7 @@ const TeamManagement = () => {
 
   try {
     await axios.post(
-      "http://localhost:5000/api/club/block-request",
+      "https://coding-club-1.onrender.com/api/club/block-request",
       { userId: activeUser._id, reason },
       { headers: { Authorization: `Bearer ${token}` } }
     );

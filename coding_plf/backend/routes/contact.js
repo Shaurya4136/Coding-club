@@ -9,14 +9,17 @@ router.post("/", async (req, res) => {
     console.log("Request received:", name, email);
 
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.ADMIN_EMAIL_PASS,
-      },
-    });
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false, // IMPORTANT: false for 587
+  requireTLS: true,
+  auth: {
+    user: process.env.ADMIN_EMAIL,
+    pass: process.env.ADMIN_EMAIL_PASS,
+  },
+  connectionTimeout: 60000, // increase timeout
+});
+
 
     await transporter.sendMail({
       from: `"Coding Club Website" <${process.env.ADMIN_EMAIL}>`,

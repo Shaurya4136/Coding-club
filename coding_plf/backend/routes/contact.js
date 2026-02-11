@@ -10,31 +10,34 @@ router.post("/", async (req, res) => {
 
     console.log("Request received:", name, email);
 
-    // ✅ Create transporter using Gmail service (RENDER SAFE CONFIG)
+    // ✅ Brevo SMTP transporter
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp-relay.brevo.com",
+      port: 587,
+      secure: false,
       auth: {
-        user: process.env.ADMIN_EMAIL,
-        pass: process.env.ADMIN_EMAIL_PASS,
+        user: process.env.BREVO_SMTP_USER,   // Brevo Login (a21fac001@smtp-brevo.com)
+        pass: process.env.BREVO_SMTP_PASS,   // Brevo SMTP Key
       },
     });
 
     // ✅ Verify SMTP connection
     await transporter.verify();
-    console.log("✅ SMTP connected successfully");
+    console.log("✅ Brevo SMTP connected successfully");
 
-    // ✅ Send email
+    // ✅ Send email to ADMIN_EMAIL1
     const info = await transporter.sendMail({
-      from: `"Coding Club Website" <${process.env.ADMIN_EMAIL}>`,
-      to: process.env.ADMIN_EMAIL,
+      from: `"Coding Club Website" <${process.env.ADMIN_EMAIL1}>`,
+      to: process.env.ADMIN_EMAIL1,
+      replyTo: email,
       subject: "New Contact Form Submission",
-      replyTo: email, // allows direct reply to user
       html: `
         <div style="font-family: Arial, sans-serif; padding: 20px;">
           <h2 style="color: #2563eb;">New Contact Form Submission</h2>
           
           <p><strong>Name:</strong> ${name}</p>
           <p><strong>Email:</strong> ${email}</p>
+          
           <p><strong>Message:</strong></p>
           
           <div style="
@@ -55,7 +58,7 @@ router.post("/", async (req, res) => {
       `,
     });
 
-    console.log("✅ Email sent:", info.messageId);
+    console.log("✅ Email sent successfully:", info.messageId);
 
     res.status(200).json({
       success: true,

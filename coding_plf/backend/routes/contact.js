@@ -7,18 +7,36 @@ router.post("/", async (req, res) => {
   try {
     const { name, email, message } = req.body;
 
+    // Validate input
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields are required",
+      });
+    }
+
     console.log("Request received:", name, email);
+
+    // Check API key exists
+    if (!process.env.BREVO_API_KEY) {
+      console.error("BREVO_API_KEY missing in environment variables");
+      return res.status(500).json({
+        success: false,
+        message: "Email service not configured",
+      });
+    }
 
     const response = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
       {
         sender: {
           name: "Coding Club Website",
-          email: process.env.ADMIN_EMAIL1,
+          email: process.env.ADMIN_EMAIL1, // must be verified in Brevo
         },
         to: [
           {
             email: process.env.ADMIN_EMAIL1,
+            name: "Admin",
           },
         ],
         replyTo: {
@@ -37,8 +55,9 @@ router.post("/", async (req, res) => {
       },
       {
         headers: {
+          "accept": "application/json",
           "api-key": process.env.BREVO_API_KEY,
-          "Content-Type": "application/json",
+          "content-type": "application/json",
         },
       }
     );
@@ -51,7 +70,10 @@ router.post("/", async (req, res) => {
     });
 
   } catch (error) {
-    console.error("❌ MAIL ERROR:", error.response?.data || error.message);
+    console.error(
+      "❌ MAIL ERROR:",
+      error.response?.data || error.message
+    );
 
     res.status(500).json({
       success: false,

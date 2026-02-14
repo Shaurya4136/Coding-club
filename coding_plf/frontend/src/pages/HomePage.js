@@ -221,6 +221,56 @@ const events = [
 </section>
 
 
+ {/* ================= DEMO CREDENTIALS SECTION ================= */}
+      <section className="bg-gray-950 text-white py-16">
+
+        <div className="max-w-4xl mx-auto text-center px-6">
+
+          <h2 className="text-4xl font-bold mb-4">
+            Demo Access Credentials
+          </h2>
+
+          <p className="text-gray-400 mb-8">
+            Use these credentials to explore the admin portal.
+          </p>
+
+          <div className="bg-black border border-gray-700 rounded-xl p-6">
+
+            <div className="grid md:grid-cols-2 gap-6">
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <p className="text-gray-400 text-sm">
+                  Admin Username
+                </p>
+
+                <p className="text-lg text-blue-400 font-semibold">
+                  M@gmail.com
+                </p>
+              </div>
+
+              <div className="bg-gray-900 p-4 rounded-lg">
+                <p className="text-gray-400 text-sm">
+                  Admin Password
+                </p>
+
+                <p className="text-lg text-green-400 font-semibold">
+                  123
+                </p>
+              </div>
+
+            </div>
+
+            <p className="text-gray-500 mt-4 text-sm">
+              Demo account for testing purposes.
+            </p>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
       {/* Welcome Section */}
       <section id="welcome" className="relative bg-cover bg-center p-20 text-center text-white" style={{ backgroundImage: 'url(/path/to/your/background.jpg)' }}>
         <div className="absolute inset-0 bg-black opacity-50"></div>
